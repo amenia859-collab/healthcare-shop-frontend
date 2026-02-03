@@ -3,6 +3,7 @@ import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
+import { useMemo } from "react";
 import "./AdminDashboard.css";
 
 function AdminDashboard() {
@@ -14,9 +15,12 @@ function AdminDashboard() {
   const [users, setUsers] = useState([]);
 
   const token = localStorage.getItem("authToken");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
+  const headers = useMemo(
+    () => ({
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+    [token],
+  );
 
   /* ================= FETCH DATA ================= */
   useEffect(() => {
