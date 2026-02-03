@@ -45,7 +45,7 @@ function AdminDashboard() {
       )
       .then((res) => setUsers(res.data))
       .catch(() => console.log("Users error"));
-  }, []);
+  }, [headers]);
 
   /* ================= HANDLERS ================= */
   const handleClose = () => {
