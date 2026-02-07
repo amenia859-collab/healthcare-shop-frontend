@@ -13,7 +13,7 @@ const Profile = () => {
   useEffect(() => {
     axios
       .get(
-        "http://healthcare-shop-backend.onrender.com/api/user/orders",
+        "https://healthcare-shop-backend.onrender.com/api/user/orders",
         headers,
       )
       .then((res) => setOrders(res.data))
