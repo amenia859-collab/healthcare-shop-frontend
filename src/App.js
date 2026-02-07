@@ -9,12 +9,16 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Cart from "./pages/Cart";
 import Footer from "./components/Footer";
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminRoute from "./components/AdminRoute";
+import Profile from "./pages/Profile";
+import PublicRoute from "./components/PublicRoute";
 
 function App() {
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(
+    JSON.parse(localStorage.getItem("cart")) || [],
+  );
 
   // 🔹 FETCH PRODUCTS FROM BACKEND
   useEffect(() => {
@@ -41,25 +45,36 @@ function App() {
 
   return (
     <>
-      <Header cart={cart} />
+      <Header cart={cart} setCart={setCart} />
       <Routes>
-        <Route path="/" element={<Home products={products} />} />
+        <Route
+          path="/"
+          element={<Home products={products} addToCart={addToCart} />}
+        />
         <Route
           path="/details/:id"
           element={<ProductDetails products={products} addToCart={addToCart} />}
         />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
         <Route path="/register" element={<Register />} />
         <Route path="/cart" element={<Cart cart={cart} />} />
 
         <Route
-          path="/admin/dashboard"
+          path="/admin/*"
           element={
             <AdminRoute>
               <AdminDashboard />
             </AdminRoute>
           }
         />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
       <Footer />
     </>

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import "./Header.css";
 
-const Header = ({ cart = [] }) => {
+const Header = ({ cart = [], setCart }) => {
   const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
   const navigate = useNavigate();
   const token = localStorage.getItem("authToken");
@@ -9,6 +9,7 @@ const Header = ({ cart = [] }) => {
   const logout = () => {
     localStorage.removeItem("cart");
     localStorage.removeItem("authToken");
+    setCart([]);
     navigate("/");
   };
 
@@ -24,28 +25,23 @@ const Header = ({ cart = [] }) => {
         <Link to="/" className="logo">
           ℌ𝔢𝔞𝔩𝔱𝔥ℭ𝔞𝔯𝔢<span>𝔒𝔲𝔱𝔩𝔢𝔱</span>
         </Link>
-        <input
-          type="text"
-          placeholder="🔍 Rechercher un produit..."
-          className="search-input"
-          onChange={(e) => {
-            localStorage.setItem("search", e.target.value);
-            navigate("/");
-          }}
-        />
 
         {/* ACTIONS */}
         <div className="header-actions">
-          <Link to="/">Accueil</Link>
+          <Link to="/">🏠 Accueil</Link>
           {!token && (
             <Link to="/login" className="login-btn">
               Connexion
             </Link>
           )}
           {token && (
-            <button className="logout-btn" onClick={logout}>
-              Déconnexion
-            </button>
+            <>
+              <Link to="/profile">👤 Profil</Link>
+              <Link to="/admin/*">🛠 Dashboard</Link>
+              <button className="logout-btn" onClick={logout}>
+                Déconnexion
+              </button>
+            </>
           )}
 
           <Link to="/cart" className="cart-icon">

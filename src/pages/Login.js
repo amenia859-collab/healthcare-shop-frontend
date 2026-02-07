@@ -24,7 +24,7 @@ const Login = () => {
       .then((res) => {
         saveToken(res.data.data);
         if (res.data.role === "admin") {
-          navigate("/admin/dashboard");
+          navigate("/admin/*");
         } else {
           navigate("/cart");
         }

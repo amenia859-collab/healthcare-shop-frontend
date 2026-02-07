@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import ProductList from "../components/ProductList";
 import "../App.css";
+import { useNavigate } from "react-router-dom";
 
-const Home = () => {
+const Home = ({ addToCart }) => {
   const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Tous");
   const [sortOrder, setSortOrder] = useState("");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [search, setSearch] = useState("");
-
+  const navigate = useNavigate();
   const categories = ["Tous", "Corps", "Visage", "Cheveux", "Hommes", "Bio"];
 
   // ================= FETCH PRODUCTS =================
@@ -64,14 +65,6 @@ const Home = () => {
   if (products.length === 0) {
     return <p style={{ textAlign: "center" }}>Chargement...</p>;
   }
-
-  // ================= ADD TO CART =================
-  const addToCart = (product) => {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push({ ...product, quantity: 1 });
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Produit ajouté au panier 🛒");
-  };
 
   return (
     <div>
@@ -146,7 +139,15 @@ const Home = () => {
 
               <button
                 className="add-to-cart-btn"
-                onClick={() => addToCart(product)}
+                onClick={() => {
+                  const token = localStorage.getItem("authToken");
+
+                  if (!token) {
+                    navigate("/login");
+                  } else {
+                    addToCart(product);
+                  }
+                }}
               >
                 Ajouter au panier
               </button>

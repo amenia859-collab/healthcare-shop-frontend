@@ -6,14 +6,10 @@ import Modal from "react-bootstrap/Modal";
 import { useMemo } from "react";
 import "./AdminDashboard.css";
 
-function AdminDashboard() {
-  const [stats, setStats] = useState({ users: 0, orders: 0, products: 0 });
+const AdminProducts = () => {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [orders, setOrders] = useState([]);
-  const [users, setUsers] = useState([]);
-
   const token = localStorage.getItem("authToken");
   const headers = useMemo(
     () => ({
@@ -22,33 +18,11 @@ function AdminDashboard() {
     [token],
   );
 
-  /* ================= FETCH DATA ================= */
   useEffect(() => {
-    axios
-      .get(
-        "https://healthcare-shop-backend.onrender.com/api/admin/stats",
-        headers,
-      )
-      .then((res) => setStats(res.data))
-      .catch(() => console.log("Stats error"));
-
     axios
       .get("https://healthcare-shop-backend.onrender.com/api/products")
       .then((res) => setProducts(res.data))
       .catch(() => console.log("Products error"));
-
-    axios
-      .get("https://healthcare-shop-backend.onrender.com/api/orders", headers)
-      .then((res) => setOrders(res.data))
-      .catch(() => console.log("Orders error"));
-
-    axios
-      .get(
-        "https://healthcare-shop-backend.onrender.com/api/admin/users",
-        headers,
-      )
-      .then((res) => setUsers(res.data))
-      .catch(() => console.log("Users error"));
   }, [headers]);
 
   /* ================= HANDLERS ================= */
@@ -119,112 +93,54 @@ function AdminDashboard() {
     }
   };
 
+  /* PRODUCTS */
   return (
-    <div className="admin-layout">
-      {/* MAIN */}
-      <main className="admin-content">
-        <div className="admin-header">
-          <h1>👑 Admin Dashboard</h1>
-          <p>Manage products, orders & users</p>
-        </div>
+    <>
+      <div className="products-header">
+        <h2>Products</h2>
+        <button className="add-product-btn" onClick={handleAddProduct}>
+          ➕ Add Product
+        </button>
+      </div>
 
-        {/* STATS */}
-        <div className="stats-grid">
-          <StatCard title="Users" value={stats.users} />
-          <StatCard title="Orders" value={stats.orders} />
-          <StatCard title="Products" value={stats.products} />
-        </div>
+      <table className="products-table">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
 
-        {/* PRODUCTS */}
-        <div className="products-header">
-          <h2>Products</h2>
-          <button className="add-product-btn" onClick={handleAddProduct}>
-            ➕ Add Product
-          </button>
-        </div>
-
-        <table className="products-table">
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Name</th>
-              <th>Price</th>
-              <th>Category</th>
-              <th>Actions</th>
+        <tbody>
+          {products.map((p) => (
+            <tr key={p._id}>
+              <td>
+                <img src={p.imageUrl} alt={p.name} />
+              </td>
+              <td>{p.name}</td>
+              <td>{p.price} DT</td>
+              <td>{p.category}</td>
+              <td>
+                <button
+                  className="edit-btn"
+                  onClick={() => handleEditProduct(p)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="delete-btn"
+                  onClick={() => deleteProduct(p._id)}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
-          </thead>
-
-          <tbody>
-            {products.map((p) => (
-              <tr key={p._id}>
-                <td>
-                  <img src={p.imageUrl} alt={p.name} />
-                </td>
-                <td>{p.name}</td>
-                <td>{p.price} DT</td>
-                <td>{p.category}</td>
-                <td>
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleEditProduct(p)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="delete-btn"
-                    onClick={() => deleteProduct(p._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <h2>📦 Orders</h2>
-
-        <table className="products-table">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Total</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {orders.map((o) => (
-              <tr key={o._id}>
-                <td>{o.user?.email || "Guest"}</td>
-                <td>{o.total} DT</td>
-                <td>{new Date(o.createdAt).toLocaleDateString()}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <h2>👤 Users</h2>
-
-        <table className="products-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {users.map((u) => (
-              <tr key={u._id}>
-                <td>{u.name || "—"}</td>
-                <td>{u.email}</td>
-                <td>{u.role}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </main>
+          ))}
+        </tbody>
+      </table>
 
       {/* MODAL */}
       <Modal show={showModal} onHide={handleClose} centered>
@@ -380,16 +296,7 @@ function AdminDashboard() {
           </Button>
         </Modal.Footer>
       </Modal>
-    </div>
+    </>
   );
-}
-
-/* ================= STATS CARD ================= */
-const StatCard = ({ title, value }) => (
-  <div className="stat-card">
-    <h3>{value}</h3>
-    <p>{title}</p>
-  </div>
-);
-
-export default AdminDashboard;
+};
+export default AdminProducts;

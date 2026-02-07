@@ -15,16 +15,8 @@ const Cart = ({ cart = [] }) => {
   const handleChange = (e) => {
     setDelivery({ ...delivery, [e.target.name]: e.target.value });
   };
-  const handleReclamationChange = (e) => {
-    setReclamation({ ...reclamation, [e.target.name]: e.target.value });
-  };
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-  const [reclamation, setReclamation] = useState({
-    subject: "",
-    message: "",
-  });
 
   /* ================= CONFIRM ORDER ================= */
   const confirmOrder = async () => {
@@ -68,7 +60,7 @@ const Cart = ({ cart = [] }) => {
     if (!token) return navigate("/login");
 
     const res = await axios.post(
-      "https://healthcare-shop-backend.onrender.com//api/payment/checkout",
+      "https://healthcare-shop-backend.onrender.com/api/payment/checkout",
       { cart },
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -76,31 +68,6 @@ const Cart = ({ cart = [] }) => {
     );
 
     window.location.href = res.data.url;
-  };
-
-  /* ================= RECLAMATION ================= */
-  const sendReclamation = async () => {
-    const token = localStorage.getItem("authToken");
-    if (!token) return navigate("/login");
-
-    if (!reclamation.message) {
-      return alert("Please describe your problem");
-    }
-
-    try {
-      await axios.post(
-        "https://healthcare-shop-backend.onrender.com//api/reclamations",
-        reclamation,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-
-      alert("📩 Reclamation sent successfully");
-      setReclamation({ subject: "", message: "" });
-    } catch (err) {
-      alert("❌ Failed to send reclamation");
-    }
   };
 
   return (
@@ -163,30 +130,6 @@ const Cart = ({ cart = [] }) => {
           </form>
         </>
       )}
-      <hr />
-      <div className="reclamation-box">
-        <h3>⚠️ Un problème ? Envoyer une réclamation</h3>
-
-        <input
-          type="text"
-          name="subject"
-          placeholder="Sujet (ex: problème de paiement)"
-          value={reclamation.subject}
-          onChange={handleReclamationChange}
-        />
-
-        <textarea
-          name="message"
-          placeholder="Décrivez votre problème..."
-          rows={4}
-          value={reclamation.message}
-          onChange={handleReclamationChange}
-        />
-
-        <button type="button" onClick={sendReclamation}>
-          📩 Envoyer la réclamation
-        </button>
-      </div>
     </div>
   );
 };
