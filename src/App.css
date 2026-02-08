@@ -410,6 +410,81 @@
   color: #6c131f;
 }
 
+/* --- PROFILE --- */
+.profile-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgb(201, 160, 211);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.08);
+}
+
+.profile-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: rgb(52, 4, 83);
+  margin-bottom: 10px;
+}
+
+.profile-sub {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: rgb(178, 37, 197);
+}
+
+.profile-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.profile-table thead {
+  background: rgb(29, 1, 41);
+}
+
+.profile-table th {
+  text-align: left;
+  padding: 14px;
+  font-size: 14px;
+  color: rgb(140, 0, 255);
+}
+
+.profile-table td {
+  padding: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.profile-table tr:hover {
+  background: #faf8ff;
+}
+
+.status {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.pending {
+  background: #ede9fe;
+  color: rgb(67, 22, 88);
+}
+
+.status.done {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.no-orders {
+  padding: 30px;
+  text-align: center;
+  background: #fff4f4;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
 /* --- FOOTER --- */
 .footer {
   background: linear-gradient(120deg, #310101 0%, #641515 50%, #a02737 100%);

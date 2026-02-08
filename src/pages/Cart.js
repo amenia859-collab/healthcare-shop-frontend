@@ -4,7 +4,8 @@ import axios from "axios";
 
 const Cart = ({ cart = [] }) => {
   const navigate = useNavigate();
-
+  const [message, setMessage] = useState("");
+  const [success, setSuccess] = useState("");
   const [delivery, setDelivery] = useState({
     nom: "",
     prenom: "",
@@ -70,6 +71,28 @@ const Cart = ({ cart = [] }) => {
     window.location.href = res.data.url;
   };
 
+  /* ================= RECLAMATION ================= */
+  const sendEmail = async () => {
+    if (!message) return alert("Write your message");
+
+    try {
+      await axios.post(
+        "https://healthcare-shop-backend.onrender.com/api/reclamations",
+        {
+          name: "Customer",
+          email: "customer@email.com",
+          message,
+        },
+      );
+
+      setSuccess("Message sent successfully");
+      setMessage("");
+    } catch (err) {
+      console.log(err);
+      alert("Error sending message");
+    }
+  };
+
   return (
     <div style={{ padding: "30px" }}>
       <h2>🛒 Mon Panier</h2>
@@ -130,6 +153,20 @@ const Cart = ({ cart = [] }) => {
           </form>
         </>
       )}
+
+      <div className="reclamation-box">
+        <h3>Report a problem with your order</h3>
+
+        <textarea
+          placeholder="Write your message..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+
+        <button onClick={sendEmail}>Send reclamation</button>
+
+        {success && <p>{success}</p>}
+      </div>
     </div>
   );
 };

@@ -63,7 +63,14 @@ function App() {
             </PublicRoute>
           }
         />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
         <Route path="/cart" element={<Cart cart={cart} />} />
 
         <Route

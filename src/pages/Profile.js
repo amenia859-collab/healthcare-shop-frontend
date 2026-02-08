@@ -16,19 +16,22 @@ const Profile = () => {
         "https://healthcare-shop-backend.onrender.com/api/user/orders",
         headers,
       )
-      .then((res) => setOrders(res.data))
+      .then((res) => {
+        console.log("ORDERS:", res.data);
+        setOrders(res.data);
+      })
       .catch(console.log);
   }, [headers]);
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h2>👤 Mon Profil</h2>
-      <h3>📦 Mes commandes</h3>
+    <div className="profile-container">
+      <h2 className="profile-title">👤 Mon Profil</h2>
+      <h3 className="profile-sub">📦 Mes commandes</h3>
 
       {orders.length === 0 ? (
         <p>Aucune commande</p>
       ) : (
-        <table style={table}>
+        <table className="profile-table">
           <thead>
             <tr>
               <th>Date</th>
@@ -44,7 +47,11 @@ const Profile = () => {
                 <td>{new Date(o.createdAt).toLocaleDateString()}</td>
                 <td>{o.total} USD</td>
                 <td>{o.delivery?.adresse}</td>
-                <td>{o.status || "Pending"}</td>
+                <td>
+                  <span className="status pending">
+                    {o.orderStatus || "Pending"}
+                  </span>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -52,11 +59,6 @@ const Profile = () => {
       )}
     </div>
   );
-};
-
-const table = {
-  width: "100%",
-  borderCollapse: "collapse",
 };
 
 export default Profile;
